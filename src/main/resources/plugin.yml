@@ -1,0 +1,12 @@
+name: SlimeChunkFinder
+main: de.jeff_media.slimechunkfinder.SlimeChunkFinder
+version: ${project.version}
+description: "Find slime chunks"
+
+depend:
+
+softdepend:
+
+permissions:
+
+commands:
