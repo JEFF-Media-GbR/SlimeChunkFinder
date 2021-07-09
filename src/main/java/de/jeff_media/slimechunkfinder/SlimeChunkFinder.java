@@ -2,14 +2,14 @@ package de.jeff_media.slimechunkfinder;
 
 import co.aikar.commands.PaperCommandManager;
 import lombok.Getter;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -43,12 +43,21 @@ public class SlimeChunkFinder extends JavaPlugin {
         new SlimeTask().runTaskTimer(this, 1, 1);
     }
 
-    public BossBar getBossBar()
+    public BossBar getBossBar(Player player) {
+        if(bossbars.containsKey(player.getUniqueId())) {
+            return bossbars.get(player.getUniqueId());
+        }
+        BossBar bossbar = Bukkit.createBossBar(null, BarColor.GREEN, BarStyle.SEGMENTED_20);
+        bossbar.addPlayer(player);
+        bossbar.setVisible(true);
+        bossbars.put(player.getUniqueId(),bossbar);
+        return bossbar;
+    }
 
     @Override
     public void onEnable() {
         PaperCommandManager commandManager = new PaperCommandManager(this);
-        commandManager.registerCommand(new FindNearestCommand());
+        commandManager.registerCommand(new FindSlimeCommand());
 
     }
 
@@ -56,9 +65,9 @@ public class SlimeChunkFinder extends JavaPlugin {
         return chunk.isSlimeChunk();
     }
 
-    public static List<Chunk> getSlimeChunks(World world, Player player) {
+    public static List<Chunk> getSlimeChunks(Player player) {
         List<Chunk> chunks = new ArrayList<>();
-        for(Chunk chunk : world.getLoadedChunks()) {
+        for(Chunk chunk : player.getWorld().getLoadedChunks()) {
             if(isSlimeChunk(chunk)) chunks.add(chunk);
         }
         Location loc = player.getLocation();
@@ -66,12 +75,11 @@ public class SlimeChunkFinder extends JavaPlugin {
         return chunks;
     }
 
-    public static Location chunkToLocation(Chunk chunk) {
+    public static Location chunkToLocation(Chunk chunk, double y) {
         World world = chunk.getWorld();
         int x = chunk.getX()*16;
-        int y = 64;
         int z = chunk.getZ()*16;
-        return new Location(world, x, y, z);
+        return new Location(world, x+8, y, z+8);
     }
 
 
