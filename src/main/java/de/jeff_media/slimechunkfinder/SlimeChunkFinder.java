@@ -47,7 +47,7 @@ public class SlimeChunkFinder extends JavaPlugin {
         if(bossbars.containsKey(player.getUniqueId())) {
             return bossbars.get(player.getUniqueId());
         }
-        BossBar bossbar = Bukkit.createBossBar(null, BarColor.GREEN, BarStyle.SEGMENTED_20);
+        BossBar bossbar = Bukkit.createBossBar("Nearest Slime Chunk", BarColor.GREEN, BarStyle.SEGMENTED_20);
         bossbar.addPlayer(player);
         bossbar.setVisible(true);
         bossbars.put(player.getUniqueId(),bossbar);
